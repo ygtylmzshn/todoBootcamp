@@ -1,4 +1,4 @@
-package com.yilmazyigitsahin.todo.entity;
+package com.yilmazyigitsahin.todo.data.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.Data;
 @Entity
 @Table(name = "todos")
 public class TodoEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,8 +14,4 @@ public class TodoEntity {
     private String title;
     private String description;
     private boolean completed;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
 }

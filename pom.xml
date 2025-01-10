@@ -69,6 +69,7 @@
             <artifactId>mssql-jdbc</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -122,6 +123,7 @@
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
+                            <version>${lombok.version}</version>
                             <artifactId>lombok</artifactId>
                         </path>
                     </annotationProcessorPaths>

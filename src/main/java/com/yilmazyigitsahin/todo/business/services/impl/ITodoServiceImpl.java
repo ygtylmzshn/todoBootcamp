@@ -1,12 +1,10 @@
-package com.yilmazyigitsahin.todo.service;
+package com.yilmazyigitsahin.todo.business.services.impl;
 
-import com.yilmazyigitsahin.todo.dto.TodoDto;
-import com.yilmazyigitsahin.todo.entity.TodoEntity;
-import com.yilmazyigitsahin.todo.entity.UserEntity;
+import com.yilmazyigitsahin.todo.business.dto.TodoDto;
+import com.yilmazyigitsahin.todo.data.entity.TodoEntity;
 import com.yilmazyigitsahin.todo.exception.TodoNotFoundException;
-import com.yilmazyigitsahin.todo.exception.UserNotFoundException;
 import com.yilmazyigitsahin.todo.repository.TodoRepository;
-import com.yilmazyigitsahin.todo.repository.UserRepository;
+import com.yilmazyigitsahin.todo.business.services.intefaces.ITodoService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,25 +14,20 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TodoServiceImpl implements TodoService {
+public class ITodoServiceImpl implements ITodoService {
     private final TodoRepository todoRepository;
-    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public TodoDto createTodo(Long userId, TodoDto todoDto) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
-
+    public TodoDto createTodo(TodoDto todoDto) {
         TodoEntity todo = modelMapper.map(todoDto, TodoEntity.class);
-        todo.setUser(user);
         TodoEntity savedTodo = todoRepository.save(todo);
         return modelMapper.map(savedTodo, TodoDto.class);
     }
 
     @Override
-    public List<TodoDto> getTodosByUserId(Long userId) {
-        List<TodoEntity> todos = todoRepository.findByUserId(userId);
+    public List<TodoDto> getAllTodos() {
+        List<TodoEntity> todos = todoRepository.findAll();
         return todos.stream()
                 .map(todo -> modelMapper.map(todo, TodoDto.class))
                 .collect(Collectors.toList());
@@ -52,7 +45,10 @@ public class TodoServiceImpl implements TodoService {
         TodoEntity todo = todoRepository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException("Todo not found with id: " + id));
 
-        modelMapper.map(todoDto, todo);
+        todo.setTitle(todoDto.getTitle());
+        todo.setDescription(todoDto.getDescription());
+        todo.setCompleted(todoDto.isCompleted());
+
         TodoEntity updatedTodo = todoRepository.save(todo);
         return modelMapper.map(updatedTodo, TodoDto.class);
     }
