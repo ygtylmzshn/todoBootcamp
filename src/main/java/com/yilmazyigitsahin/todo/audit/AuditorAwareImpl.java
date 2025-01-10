@@ -7,6 +7,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        return Optional.of("System"); // Authentication olmadığı için "System" döndürülüyor
+        return Optional.of("System");
     }
 }

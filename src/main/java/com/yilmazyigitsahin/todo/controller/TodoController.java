@@ -10,36 +10,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/todos")
+@RequestMapping("/api/users/{userId}/todos")
 @RequiredArgsConstructor
 public class TodoController {
     private final ITodoService ITodoService;
 
     @PostMapping
-    public ResponseEntity<TodoDto> createTodo(@Valid @RequestBody TodoDto todoDto) {
-        return ResponseEntity.ok(ITodoService.createTodo(todoDto));
+    public ResponseEntity<TodoDto> createTodo(
+            @PathVariable Long userId,
+            @Valid @RequestBody TodoDto todoDto) {
+        return ResponseEntity.ok(ITodoService.createTodo(userId, todoDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<TodoDto>> getAllTodos() {
-        return ResponseEntity.ok(ITodoService.getAllTodos());
+    public ResponseEntity<List<TodoDto>> getTodos(@PathVariable Long userId) {
+        return ResponseEntity.ok(ITodoService.getTodosByUserId(userId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TodoDto> getTodoById(@PathVariable Long id) {
-        return ResponseEntity.ok(ITodoService.getTodoById(id));
+    @GetMapping("/{todoId}")
+    public ResponseEntity<TodoDto> getTodoById(
+            @PathVariable Long userId,
+            @PathVariable Long todoId) {
+        return ResponseEntity.ok(ITodoService.getTodoById(userId, todoId));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{todoId}")
     public ResponseEntity<TodoDto> updateTodo(
-            @PathVariable Long id,
+            @PathVariable Long userId,
+            @PathVariable Long todoId,
             @Valid @RequestBody TodoDto todoDto) {
-        return ResponseEntity.ok(ITodoService.updateTodo(id, todoDto));
+        return ResponseEntity.ok(ITodoService.updateTodo(userId, todoId, todoDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
-        ITodoService.deleteTodo(id);
+    @DeleteMapping("/{todoId}")
+    public ResponseEntity<Void> deleteTodo(
+            @PathVariable Long userId,
+            @PathVariable Long todoId) {
+        ITodoService.deleteTodo(userId, todoId);
         return ResponseEntity.noContent().build();
     }
 }
